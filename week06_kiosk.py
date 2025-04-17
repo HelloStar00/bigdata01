@@ -31,5 +31,6 @@ while True :
 
 print("상품명 단가 수량 금액")
 for i in range(len(drinks)):
-    print(f"{drinks[i]} {price[i]}원 {amounts[i]}잔 {price[i] * amounts[i]}원")
+    if amounts[i] > 0 :
+        print(f"{drinks[i]} {price[i]}원 {amounts[i]}잔 {price[i] * amounts[i]}원")
 print(f"총 주문 금액 : {total_price}원")
