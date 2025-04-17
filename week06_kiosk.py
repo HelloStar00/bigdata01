@@ -1,8 +1,8 @@
 # 1) 아아 : 2000원 2) 라떼 : 2500원
-drinks = ["아이스 아메리카노"]
-price = [1500]
+drinks = ["아이스 아메리카노", "카페 라떼", "수박 주스", "딸기 라떼"]
+price = [1500, 2500, 4000, 4200]
 total_price = 0
-amounts = [0 for _ in range(len(drinks))]
+amounts = [0] * len(drinks)
 
 def order_process(idx):
     """
