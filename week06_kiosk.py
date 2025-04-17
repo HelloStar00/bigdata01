@@ -4,8 +4,13 @@ price = [1500, 2500, 4000]
 amounts = [0, 0, 0]
 total_price = 0
 
+menu_texts = ""
+for j in range(len(drinks)) :
+    menu_texts = menu_texts + f"{j+1}) {drinks[j]} {price[j]}원 "
+menu_texts = menu_texts + f"{len(drinks)+1}) 주문 종료 : "
+
 while True :
-    menu = input(f"1) {drinks[0]} {price[0]}원 2) {drinks[1]} {price[1]}원 3) {drinks[2]} {price[2]}원 4) 주문 종료 : ")
+    menu = input(menu_texts)
     if menu == "1" :
         print(f"{drinks[0]}를 주문하셨습니다. 가격은 {price[0]}원입니다.")
         total_price = total_price + price[0]
@@ -24,7 +29,7 @@ while True :
     else:
         print(f"{menu}번 메뉴는 존재하지 않습니다. 아래 멘에서 골라주세요.")
 
-print(f"{drinks[0]} {price[0]}원 {amounts[0]}잔 {price[0] * amounts[0]}")
-print(f"{drinks[1]} {price[1]}원 {amounts[1]}잔 {price[1] * amounts[1]}")
-print(f"{drinks[2]} {price[2]}원 {amounts[2]}잔 {price[2] * amounts[2]}")
+print("상품명 단가 수량 금액")
+for i in range(len(drinks)):
+    print(f"{drinks[i]} {price[i]}원 {amounts[i]}잔 {price[i] * amounts[i]}원")
 print(f"총 주문 금액 : {total_price}원")
