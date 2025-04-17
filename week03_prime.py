@@ -1,15 +1,15 @@
 number = int(input())
-count = 0
+isPrime = True
 
 if number >= 2 :
     for i in range(1, number + 1) :
         if number % i == 0 :
-            count = count + 1
+            isPrime = True
         print(i, end=" ")
 else :
-    count = 1
+    isPrime = False
 
-if count == 0 :
+if isPrime :
     print(f"\n{number}는(은) 소수입니다.")
 else :
     print(f"\n{number}는(은) 소수가 아닙니다.")
