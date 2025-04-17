@@ -2,10 +2,12 @@ number = int(input())
 isPrime = True
 
 if number >= 2 :
-    for i in range(1, number + 1) :
+    i = 2
+    while i * i <= number :
         if number % i == 0 :
             isPrime = True
         print(i, end=" ")
+        i = i + 1
 else :
     isPrime = False
 
