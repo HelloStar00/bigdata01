@@ -33,3 +33,7 @@ def print_receipt() -> None:    # type hint
     for i in range(len(drinks)):
         if amounts[i] > 0:
             print(f"{drinks[i]:^20}{price[i]:^6}{amounts[i]:^6}{price[i] * amounts[i]:^6}")
+
+def test() -> None :
+    pass
+    # 앞으로 넣을 키오스크 기능
