@@ -1,6 +1,7 @@
 # 1) 아아 : 2000원 2) 라떼 : 2500원
+import sqlite3
 import kiosk
-import datetime
+import datetime # 날짜, 시간 가져오는 모듈
 
 drinks = ["아이스 아메리카노", "카페 라떼", "수박 주스", "딸기 주스"]
 price = [1500, 2500, 4000, 4200]
@@ -62,8 +63,31 @@ def print_ticket_number() -> None :
     with open("ticket.txt", "w") as fp :
         fp.write(str(number))
 
-    print(f"번호표 : {number}")
+    conn = sqlite3.connect('cafe.db')
+    cur = conn.cursor()
+    cur.execute('''
+        create table if not exists ticket (
+        id integer primary key autoincrement,
+        number integer not null
+        )
+    ''')
+
+    cur.execute('select number from ticket order by number desc limit 1')
+    # 제일 큰 숫자 1개만 가져 온다는 줄
+    result = cur.fetchone()
+
+    if result is None:
+        number = 1
+        cur.execute('insert into ticket (number) values (?)', (number,))
+    else:
+        number = result[0] + 1
+        cur.execute('update ticket set number = (?)', (number,))
+        # 이걸 이제 update set으로 바꾸면 됨
+    conn.commit()
+
+
     # return number
+    print(f"번호표 : {number}")
 
 def order_process(idx : int) -> None:   # type hint
     """
