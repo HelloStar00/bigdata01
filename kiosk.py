@@ -1,4 +1,6 @@
 # 1) 아아 : 2000원 2) 라떼 : 2500원
+import kiosk
+
 drinks = ["아이스 아메리카노", "카페 라떼", "수박 주스", "딸기 주스"]
 price = [1500, 2500, 4000, 4200]
 total_price = 0
@@ -10,6 +12,24 @@ DISCOUNT_THRESHOLD = 10000  # 할인이 적용 되는 임계값 (임계값 이�
 DISCOUNT_RATE = 0.1         # 할인율
 # 협업할 때 변수, 상수 이름이 중요함
 
+def run() -> None:
+    """
+    키오스크 실행(구동) 함수
+    :return: None
+    """
+    while True:
+        try:
+            menu = int(input(kiosk.display_menu()))
+            if len(kiosk.drinks) >= menu >= 1:
+                kiosk.order_process(menu - 1)
+            elif menu == len(kiosk.drinks) + 1 :
+                print("주문을 종료합니다.")
+                break
+            else:
+                print(f"{menu}번 메뉴는 존재하지 않습니다.")
+        except ValueError:
+            print(f"문자를 입력할 수 없습니다. 숫자를 입력해 주세요.")
+
 def apply_discount(price:int) -> float :
     """
     총 금액이 특정 금액(인계값)을 넘어서면 할인율 적용 함수
@@ -19,6 +39,30 @@ def apply_discount(price:int) -> float :
     if price >= DISCOUNT_THRESHOLD:
         return price * (1 - DISCOUNT_RATE)
     return price
+
+def print_ticket_number() -> None :
+    """
+    주문 번호표 처리 기능 함수
+    :return: 번호
+
+    함수 이름 원래 get_ticket_number 였는데
+    get은 원래 리턴을 받을 때 주로 쓰는 거라서
+    return값이 없고 print만 있으니
+    이름을 print_ticket_number로 바꿈
+    """
+    try :
+        with open("ticket.txt", "r") as fp:
+            number = int(fp.read())
+    except FileNotFoundError :
+        number =0
+
+    number = number + 1
+
+    with open("ticket.txt", "w") as fp :
+        fp.write(str(number))
+
+    print(f"번호표 : {number}")
+    # return number
 
 def order_process(idx : int) -> None:   # type hint
     """
@@ -49,7 +93,17 @@ def print_receipt() -> None:    # type hint
     for i in range(len(drinks)):
         if amounts[i] > 0:
             print(f"{drinks[i]:^20}{price[i]:^6}{amounts[i]:^6}{price[i] * amounts[i]:^6}")
-    print(f"총 주문 금액 : {total_price}원")
+
+    discounted_price = apply_discount(total_price)
+    discount = total_price - discounted_price
+
+    print(f"\n할인 전 총 주문 금액 : {total_price}원")
+    if discount > 0 :
+        print(f"할인 금액 : {discount}원 {DISCOUNT_RATE * 100}%") # 영수증에 할인율 추가
+        print(f"할인 적용 후 지불하실 총 금액 : {discounted_price}원")
+    else:
+        print(f"할인이 적용되지 않았습니다. \n지불하실 총 금액은 {total_price}원 입니다.")
+
 
 def test() -> None :
     pass
