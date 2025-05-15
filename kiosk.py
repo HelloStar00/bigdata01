@@ -1,5 +1,6 @@
 # 1) 아아 : 2000원 2) 라떼 : 2500원
 import kiosk
+import datetime
 
 drinks = ["아이스 아메리카노", "카페 라떼", "수박 주스", "딸기 주스"]
 price = [1500, 2500, 4000, 4200]
@@ -89,7 +90,7 @@ def print_receipt() -> None:    # type hint
     영수증 출력 기능
     :return: 없음
     """
-    print(f"{'상품명':^20}{'단가':^6}{'수량':^6}{'금액' :^6}")
+    print(f"\n{'상품명':^20}{'단가':^6}{'수량':^6}{'금액' :^6}")
     for i in range(len(drinks)):
         if amounts[i] > 0:
             print(f"{drinks[i]:^20}{price[i]:^6}{amounts[i]:^6}{price[i] * amounts[i]:^6}")
@@ -97,12 +98,16 @@ def print_receipt() -> None:    # type hint
     discounted_price = apply_discount(total_price)
     discount = total_price - discounted_price
 
-    print(f"\n할인 전 총 주문 금액 : {total_price}원")
+    # temp.py에 설명이 나와 있음
+    print(f"\n{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    # >> 메소드 체인 기법 (변수로 선언하지 않고 바로 불러오기)
+
+    print(f"할인 전 총 주문 금액 : {total_price}원")
     if discount > 0 :
         print(f"할인 금액 : {discount}원 {DISCOUNT_RATE * 100}%") # 영수증에 할인율 추가
         print(f"할인 적용 후 지불하실 총 금액 : {discounted_price}원")
     else:
-        print(f"할인이 적용되지 않았습니다. \n지불하실 총 금액은 {total_price}원 입니다.")
+        print(f"할인이 적용 되지 않았습니다. \n지불 하실 총 금액은 {total_price}원 입니다.")
 
 
 def test() -> None :
