@@ -1,7 +1,6 @@
 # 1) 아아 : 2000원 2) 라떼 : 2500원
 import sqlite3
-import kiosk
-import datetime # 날짜, 시간 가져오는 모듈
+from datetime import datetime # 날짜, 시간 가져오는 모듈
 
 drinks = ["아이스 아메리카노", "카페 라떼", "수박 주스", "딸기 주스"]
 price = [1500, 2500, 4000, 4200]
@@ -21,10 +20,10 @@ def run() -> None:
     """
     while True:
         try:
-            menu = int(input(kiosk.display_menu()))
-            if len(kiosk.drinks) >= menu >= 1:
-                kiosk.order_process(menu - 1)
-            elif menu == len(kiosk.drinks) + 1 :
+            menu = int(input(display_menu()))
+            if len(drinks) >= menu >= 1:
+                order_process(menu - 1)
+            elif menu == len(drinks) + 1 :
                 print("주문을 종료합니다.")
                 break
             else:
@@ -68,7 +67,8 @@ def print_ticket_number() -> None :
     cur.execute('''
         create table if not exists ticket (
         id integer primary key autoincrement,
-        number integer not null
+        number integer not null,
+        created_at text not null default (datetime('now', 'localtime'))
         )
     ''')
 
@@ -76,18 +76,21 @@ def print_ticket_number() -> None :
     # 제일 큰 숫자 1개만 가져 온다는 줄
     result = cur.fetchone()
 
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     if result is None:
         number = 1
-        cur.execute('insert into ticket (number) values (?)', (number,))
+        cur.execute('insert into ticket (number, created_at) values (?, ?)', (number, now,))
     else:
         number = result[0] + 1
-        cur.execute('update ticket set number = (?)', (number,))
+        # cur.execute('update ticket set number = (?) ', (number,))
         # 이걸 이제 update set으로 바꾸면 됨
+        # cur.execute('update ticket set number=? where id = (select id from ticket order by number desc limit 1)', (number,))
+        cur.execute('insert into ticket (number, created_at) values (?, ?)', (number, now,))
     conn.commit()
 
 
     # return number
-    print(f"번호표 : {number}")
+    print(f"번호표 : {number} ({now})")
 
 def order_process(idx : int) -> None:   # type hint
     """
@@ -123,7 +126,7 @@ def print_receipt() -> None:    # type hint
     discount = total_price - discounted_price
 
     # temp.py에 설명이 나와 있음
-    print(f"\n{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     # >> 메소드 체인 기법 (변수로 선언하지 않고 바로 불러오기)
 
     print(f"할인 전 총 주문 금액 : {total_price}원")
